@@ -9,8 +9,7 @@
   "files": [
     "dist"
   ],
-  "keywords": [
-  ],
+  "keywords": [],
   "author": "Magicalwell",
   "license": "ISC",
   "dependencies": {

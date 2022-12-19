@@ -19,7 +19,7 @@ export function on(target, eventName, handler, opitons = false) {
 // 判断接口是否在黑名单中，黑名单中的接口不上报，这块后续和权限系统打通。
 function isBlackUrl(url) {
   // return options.filterXhrUrlRegExp && options.filterXhrUrlRegExp.test(url);
-  return false
+  return true
 }
 function motifyXHR() {
   const originalXhr = XMLHttpRequest.prototype;
@@ -84,25 +84,40 @@ function motifyFetch() {
       },(error)=>{
         console.log(error,'坏了！这下出问题了');
         const eTime = Date.now();
+        console.log(method, xhrMethods.Post, isBlackUrl(url));
         if ((method === xhrMethods.Post && request.isSelfUrl(url)) || isBlackUrl(url)) return;
         fetchData = Object.assign(Object.assign({}, fetchData), {
           duringTime: eTime - sTime,
           status: 0,
           time: sTime
         });
-        handler[EVENTTYPES.FETCH](this.fetchData)
+        handler[EVENTTYPES.FETCH](fetchData)
         throw error;
       });
     }
   })
 }
+function motifyListenError() {
+  on(
+    window,
+    'error',
+    function (e) {
+      handler[EVENTTYPES.ERROR] (e);
+    },
+    true
+  );
+}
 export function motifyFn() {
-  handler[EVENTTYPES.XHR] = (data) => {
+  handler[EVENTTYPES.XHR] = (data) => 
     Emitter.handleHttp(data, EVENTTYPES.XHR)
-  }
-  handler[EVENTTYPES.FETCH] = (data) => {
+  
+  handler[EVENTTYPES.FETCH] = (data) => 
     Emitter.handleHttp(data, EVENTTYPES.FETCH)
-  }
+  
+  handler[EVENTTYPES.ERROR] = (data) => 
+    Emitter.handleError(data, EVENTTYPES.ERROR)
+  
   motifyXHR()
   motifyFetch()
+  motifyListenError()
 }

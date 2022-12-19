@@ -14,8 +14,12 @@ export default {
     HelloWorld,
   },
   mounted(){
-    this.$axios({method:'post',url:'http://127.0.0.1:8083/reportData1',data:{tttt:1}})
-    this.$test()
+    this.$axios({method:'POST',url:'http://127.0.0.1:8086/reportData1',data:{tttt:1}})
+    // let a = undefined;
+    //   if (a.length) {
+    //     console.log('1');
+    //   }
+    // this.$test()
   }
 };
 </script>

@@ -21,7 +21,7 @@ export class Request{
     const requestFun = () => {
       console.log(url);
       fetch(`${url}`, {
-        method: 'post',
+        method: 'POST',
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json'
